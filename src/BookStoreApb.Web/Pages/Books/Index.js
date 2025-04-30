@@ -1,6 +1,8 @@
 $(function () {
     var l = abp.localization.getResource('bookStoreApb');
-
+    var editModal = new abp.ModalManager(abp.appPath + 'Books/EditModal');
+    var createModal = new abp.ModalManager(abp.appPath + 'Books/CreateModal');
+  
     var dataTable = $('#BooksTable').DataTable(
         abp.libs.datatables.normalizeConfiguration({
             serverSide: true,
@@ -10,6 +12,39 @@ $(function () {
             scrollX: true,
             ajax: abp.libs.datatables.createAjax(bookStoreApb.book.getList),
             columnDefs: [
+                {
+                    title: l('Actions'),
+                    rowAction: {
+                        items:
+                            [
+                                {
+                                    text: l('Edit'),
+                                    action: function (data) {
+                                        editModal.open({ id: data.record.id });
+                                    }
+                                },
+                                {
+                                    text: l('Delete'),
+                                    confirmMessage: function (data) {
+                                        return l(
+                                            'BookDeletionConfirmationMessage',
+                                            data.record.name
+                                        );
+                                    },
+                                    action: function (data) {
+                                        bookStoreApb.book
+                                            .delete(data.record.id)
+                                            .then(function() {
+                                                abp.notify.info(
+                                                    l('SuccessfullyDeleted')
+                                                );
+                                                dataTable.ajax.reload();
+                                            });
+                                    }
+                                }
+                            ]
+                    }
+                },
                 {
                     title: l('Name'),
                     data: "name"
@@ -50,9 +85,11 @@ $(function () {
         })
     );
 
-    var createModal = new abp.ModalManager(abp.appPath + 'Books/CreateModal');
+     createModal.onResult(function () {
+        dataTable.ajax.reload();
+    });
 
-    createModal.onResult(function () {
+    editModal.onResult(function () {
         dataTable.ajax.reload();
     });
 
