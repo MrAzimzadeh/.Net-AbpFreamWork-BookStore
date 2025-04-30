@@ -1,0 +1,15 @@
+﻿{
+  "applications": {
+    "BookStoreApb.Web": {
+      "type": "dotnet-project",
+      "launchUrl": "https://localhost:44303",
+      "path": "../../../src/BookStoreApb.Web/BookStoreApb.Web.csproj",
+      "kubernetesService": ".*-web$",
+      "healthCheckEndpoint": "/health-status",
+      "healthUiEndpoint": "/health-ui",
+      "execution": {
+        "order": 2
+      }
+    }
+  }
+}
