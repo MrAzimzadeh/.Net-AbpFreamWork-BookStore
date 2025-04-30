@@ -45,7 +45,7 @@ $(function () {
                             ]
                     }
                 },
-                {
+                { 
                     title: l('Name'),
                     data: "name"
                 },
