@@ -167,6 +167,7 @@ public class BookStoreApbWebModule : AbpModule
                 {
                     bundle.AddFiles("/global-scripts.js");
                     bundle.AddFiles("/global-styles.css");
+                    bundle.AddFiles("/index.css");
                 }
             );
         });

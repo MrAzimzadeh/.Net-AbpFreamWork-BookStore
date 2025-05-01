@@ -1,0 +1,21 @@
+/* Getting-Started */
+.starting-content {
+    position: relative;
+    z-index: 2;
+}
+.card-bg-image {
+    pointer-events: none;
+    position: absolute;
+    width: 630px;
+    height: auto;
+    bottom: 0;
+    right: 0;
+    z-index: 1;
+}
+
+.custom-input {
+    background-color: #e3f2fd !important;
+    color: #1976d2 !important;
+    border-color: #1976d2 !important;
+}
+/* Getting-Started End */

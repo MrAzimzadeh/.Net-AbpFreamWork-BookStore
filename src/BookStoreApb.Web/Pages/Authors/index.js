@@ -1,16 +1,16 @@
-$(function () {
+﻿$(function () {
     var l = abp.localization.getResource('bookStoreApb');
-    var editModal = new abp.ModalManager(abp.appPath + 'Books/EditModal');
-    var createModal = new abp.ModalManager(abp.appPath + 'Books/CreateModal');
-  
-    var dataTable = $('#BooksTable').DataTable(
+    var createModal = new abp.ModalManager(abp.appPath + 'Authors/CreateModal');
+    var editModal = new abp.ModalManager(abp.appPath + 'Authors/EditModal');
+
+    var dataTable = $('#AuthorsTable').DataTable(
         abp.libs.datatables.normalizeConfiguration({
             serverSide: true,
             paging: true,
             order: [[1, "asc"]],
             searching: false,
             scrollX: true,
-            ajax: abp.libs.datatables.createAjax(bookStoreApb.book.getList),
+            ajax: abp.libs.datatables.createAjax(bookStoreApb.author.getList),
             columnDefs: [
                 {
                     title: l('Actions'),
@@ -19,22 +19,26 @@ $(function () {
                             [
                                 {
                                     text: l('Edit'),
+                                    visible:
+                                        abp.auth.isGranted('BookStore.Authors.Edit'),
                                     action: function (data) {
                                         editModal.open({ id: data.record.id });
                                     }
                                 },
                                 {
                                     text: l('Delete'),
+                                    visible:
+                                        abp.auth.isGranted('BookStore.Authors.Delete'),
                                     confirmMessage: function (data) {
                                         return l(
-                                            'BookDeletionConfirmationMessage',
+                                            'AuthorDeletionConfirmationMessage',
                                             data.record.name
                                         );
                                     },
                                     action: function (data) {
-                                        bookStoreApb.book
+                                        acme.bookStore.authors.author
                                             .delete(data.record.id)
-                                            .then(function() {
+                                            .then(function () {
                                                 abp.notify.info(
                                                     l('SuccessfullyDeleted')
                                                 );
@@ -45,24 +49,13 @@ $(function () {
                             ]
                     }
                 },
-                { 
+                {
                     title: l('Name'),
                     data: "name"
                 },
                 {
-                    title: l('Author'),
-                    data: "authorName"
-                },
-                {
-                    title: l('Type'),
-                    data: "type",
-                    render: function (data) {
-                        return l('Enum:BookType.' + data);
-                    }
-                },
-                {
-                    title: l('PublishDate'),
-                    data: "publishDate",
+                    title: l('BirthDate'),
+                    data: "birthDate",
                     render: function (data) {
                         return luxon
                             .DateTime
@@ -70,26 +63,12 @@ $(function () {
                                 locale: abp.localization.currentCulture.name
                             }).toLocaleString();
                     }
-                },
-                {
-                    title: l('Price'),
-                    data: "price"
-                },
-                {
-                    title: l('CreationTime'), data: "creationTime",
-                    render: function (data) {
-                        return luxon
-                            .DateTime
-                            .fromISO(data, {
-                                locale: abp.localization.currentCulture.name
-                            }).toLocaleString(luxon.DateTime.DATETIME_SHORT);
-                    }
                 }
             ]
         })
     );
 
-     createModal.onResult(function () {
+    createModal.onResult(function () {
         dataTable.ajax.reload();
     });
 
@@ -97,7 +76,7 @@ $(function () {
         dataTable.ajax.reload();
     });
 
-    $('#NewBookButton').click(function (e) {
+    $('#NewAuthorButton').click(function (e) {
         e.preventDefault();
         createModal.open();
     });

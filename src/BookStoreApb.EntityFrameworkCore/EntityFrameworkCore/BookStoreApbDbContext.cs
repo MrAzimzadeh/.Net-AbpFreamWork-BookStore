@@ -15,6 +15,7 @@ using Volo.Abp.SettingManagement.EntityFrameworkCore;
 using Volo.Abp.OpenIddict.EntityFrameworkCore;
 using Volo.Abp.TenantManagement;
 using Volo.Abp.TenantManagement.EntityFrameworkCore;
+using BookStoreApb.Authors;
 
 namespace BookStoreApb.EntityFrameworkCore;
 
@@ -60,8 +61,10 @@ public class BookStoreApbDbContext :
 
     
     public DbSet<Book> Books { get; set; }
+    public DbSet<Author> Authors { get; set; }
 
-    
+
+
     public BookStoreApbDbContext(DbContextOptions<BookStoreApbDbContext> options)
         : base(options)
     {
@@ -83,7 +86,7 @@ public class BookStoreApbDbContext :
         builder.ConfigureOpenIddict();
         builder.ConfigureTenantManagement();
         builder.ConfigureBlobStoring();
-        
+
         /* Configure your own tables/entities inside here */
 
         //builder.Entity<YourEntity>(b =>
@@ -92,13 +95,30 @@ public class BookStoreApbDbContext :
         //    b.ConfigureByConvention(); //auto configure for the base class props
         //    //...
         //});
-        
+        builder.Entity<Author>(b =>
+        {
+            b.ToTable(BookStoreApbConsts.DbTablePrefix + "Authors",
+                BookStoreApbConsts.DbSchema);
+
+            b.ConfigureByConvention();
+
+            b.Property(x => x.Name)
+                .IsRequired()
+                .HasMaxLength(AuthorConsts.MaxNameLength);
+
+            b.HasIndex(x => x.Name);
+        });
+
         builder.Entity<Book>(b =>
         {
             b.ToTable(BookStoreApbConsts.DbTablePrefix + "Books",
                 BookStoreApbConsts.DbSchema);
             b.ConfigureByConvention(); //auto configure for the base class props
             b.Property(x => x.Name).IsRequired().HasMaxLength(128);
+            b.HasOne<Author>().WithMany().HasForeignKey(x => x.AuthorId).IsRequired();
+
         });
+
+   
     }
 }

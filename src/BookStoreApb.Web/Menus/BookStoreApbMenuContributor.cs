@@ -35,7 +35,7 @@ public class BookStoreApbMenuContributor : IMenuContributor
             )
             
         );
-        
+
         context.Menu.AddItem(
             new ApplicationMenuItem(
                 "BooksStore",
@@ -44,12 +44,20 @@ public class BookStoreApbMenuContributor : IMenuContributor
             ).AddItem(
                 new ApplicationMenuItem(
                     "BooksStore.Books",
-                    l["Menu:BookStore"],
+                    l["Menu:Books"],
                     url: "/Books"
-                )
+                ).RequirePermissions(BookStoreApbPermissions.Books.Default)
+            ).AddItem( // ADDED THE NEW "AUTHORS" MENU ITEM UNDER THE "BOOK STORE" MENU
+                new ApplicationMenuItem(
+                    "BooksStore.Authors",
+                    l["Menu:Authors"],
+                    url: "/Authors"
+                ).RequirePermissions(BookStoreApbPermissions.Authors.Default)
             )
         );
-       
+
+
+
 
 
         //Administration

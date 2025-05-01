@@ -1,4 +1,6 @@
 using AutoMapper;
+using BookStoreApb.AuthorDtos;
+using BookStoreApb.Authors;
 using BookStoreApb.BookDtos;
 using BookStoreApb.Books;
 
@@ -13,6 +15,9 @@ public class BookStoreApbApplicationAutoMapperProfile : Profile
          * into multiple profile classes for a better organization. */
         CreateMap<Book, BookDto>();
         CreateMap<CreateUpdateBookDto, Book>();
+        CreateMap<Author, AuthorDto>();
+        CreateMap<Author, AuthorLookupDto>();
+
 
 
     }
